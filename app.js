@@ -5,6 +5,9 @@ const config = require('config')
 
 const app = express()
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+
 const PORT = config.get('port') ?? 8080
 
 // if (process.env.NODE_ENV === 'production') {
