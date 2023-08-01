@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const professionsScheme = new Schema(
+const professionScheme = new Schema(
   {
     name: {
       type: String,
@@ -12,6 +12,6 @@ const professionsScheme = new Schema(
   }
 )
 
-const Proffesion = model('Proffesion', professionsScheme)
+const Proffesion = model('Proffesion', professionScheme)
 
 module.exports = Proffesion
