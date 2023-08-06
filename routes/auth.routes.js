@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const { check, validationResult } = require('express-validator')
 const { generateUserData } = require('../utils/helpers')
 const tokenService = require('../services/token.service')
+const Token = require('../models/Token')
 const router = express.Router({ mergeParams: true })
 
 // /api/auth/signUp
@@ -129,6 +130,38 @@ router.post('/signInWithPassword', [
     }
   },
 ])
-router.post('/token', () => {})
+
+function isTokenInvalid(data, dbToken) {
+  console.log('data', data)
+  console.log('dbtoken', dbToken)
+
+  return !data || !dbToken || data._id !== dbToken?.userId?.toString()
+}
+
+router.post('/token', async (req, res) => {
+  try {
+    const { refresh_token: refreshToken } = req.body
+
+    const data = tokenService.validateRefresh(refreshToken)
+
+    const dbToken = await tokenService.findToken(refreshToken)
+
+    if (isTokenInvalid(data, dbToken)) {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
+
+    const tokens = await tokenService.generate({
+      _id: data._id,
+    })
+
+    await tokenService.save(data._id, tokens.refreshToken)
+
+    res.status(200).send({ ...tokens, userId: data._id })
+  } catch (error) {
+    res.status(500).json({
+      message: 'На сервере произошла ошибка. Попробуйте позже',
+    })
+  }
+})
 
 module.exports = router
