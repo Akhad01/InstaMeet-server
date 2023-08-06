@@ -37,6 +37,8 @@ router.post('/signUp', async (req, res) => {
 
     const tokens = tokenService.generate({ _id: newUser._id })
 
+    await tokenService.save(newUser._id, tokens.refreshToken)
+
     res.status(201).send({ ...tokens, userId: newUser._id })
   } catch (error) {
     res.status(500).json({
