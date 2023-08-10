@@ -38,6 +38,18 @@ class TokenService {
     }
   }
 
+  validateAccess(accessToken) {
+    try {
+      console.log('jwt', config.get('accessSecret'))
+
+      return jwt.verify(accessToken, config.get('accessSecret'))
+    } catch (error) {
+      console.log('error', error.message)
+
+      return null
+    }
+  }
+
   async findToken(refreshToken) {
     try {
       return await Token.findOne({ refreshToken })
