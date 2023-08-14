@@ -132,9 +132,6 @@ router.post('/signInWithPassword', [
 ])
 
 function isTokenInvalid(data, dbToken) {
-  console.log('data', data)
-  console.log('dbtoken', dbToken)
-
   return !data || !dbToken || data._id !== dbToken?.userId?.toString()
 }
 

@@ -15,8 +15,6 @@ module.exports = (req, res, next) => {
 
     const data = tokenService.validateAccess(token)
 
-    console.log('data', data)
-
     req.user = data
 
     next()

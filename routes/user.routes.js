@@ -7,11 +7,11 @@ router.patch('/:userId', auth, async (req, res) => {
   try {
     const { userId } = req.params
 
-    // todo: userId === current user id
     if (userId === req.user._id) {
       const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
         new: true,
       })
+
       res.send(updatedUser)
     } else {
       res.status(401).json({
@@ -28,8 +28,6 @@ router.patch('/:userId', auth, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
   try {
-    console.log('req', req.user)
-
     const list = await User.find()
     res.send(list)
   } catch (error) {
